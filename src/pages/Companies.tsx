@@ -4,8 +4,7 @@ import {
   Search, 
   Settings2, 
   DollarSign, 
-  Laptop, 
-  X, 
+  X,
   RefreshCw,
   Plus
 } from 'lucide-react';

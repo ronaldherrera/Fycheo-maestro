@@ -97,7 +97,7 @@ export const Finanzas: React.FC<{ onGoToSupport: (accountId: string) => void }> 
             const unified = [...orgs, ...personales].sort((a, b) => b.balance - a.balance);
             setWallets(unified);
             setCompanies((companiesData ?? []).map((c: any) => ({ id: c.id, plan: c.plan })));
-            setTransactions(txData ?? []);
+            setTransactions((txData ?? []) as Transaction[]);
         } catch (e) {
             console.error(e);
         } finally {

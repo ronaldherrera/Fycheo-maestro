@@ -20,9 +20,6 @@ import {
   CheckCheck,
   LifeBuoy,
   CreditCard,
-  UserCheck,
-  Smartphone,
-  Monitor,
   BookOpen,
 } from 'lucide-react';
 import { MAILBOXES } from '../lib/mailboxes';

@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import {
-  Search, RefreshCw, Building2, Users, Smartphone, Monitor,
-  ChevronRight, ArrowLeft, CreditCard, AlertCircle,
-  Clock, UserCheck, Wifi, WifiOff, Coins, FileText, Mail,
-  Calendar, Shield, Pencil, Send, Euro, X, Check,
-  Plus, Trash2, History, UserPlus
+  Search, RefreshCw, Building2, Users, Smartphone,
+  ChevronRight, ArrowLeft, CreditCard,
+  Clock, UserCheck, Coins, Mail,
+  Shield, Pencil, Send, Euro, X,
+  Plus, Trash2, History
 } from 'lucide-react';
 
 /* ── TIPOS ── */
@@ -1660,14 +1660,6 @@ const ViewCompanyDetail: React.FC<ViewCompanyDetailProps> = ({
       console.error(err);
       alert('Error al eliminar fichaje.');
     }
-  };
-
-  const calculateDuration = (inStr: string, outStr: string | null) => {
-    if (!outStr) return 'En curso';
-    const diffMs = new Date(outStr).getTime() - new Date(inStr).getTime();
-    if (diffMs <= 0) return '0.0h';
-    const hours = diffMs / (1000 * 60 * 60);
-    return `${hours.toFixed(1)}h`;
   };
 
   const pm = planMeta(company.plan);

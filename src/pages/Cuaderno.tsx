@@ -238,7 +238,6 @@ const PLAN_COLOR: Record<string, string> = {
   basic: '#3b82f6', pro: '#8b5cf6', ultimate: '#f59e0b', free: '#6b7280',
 };
 
-const ORG_COLOR  = '#10b981';
 const USER_COLOR = '#8b5cf6';
 
 const ProfileRow: React.FC<{ p: Profile; color: string }> = ({ p, color }) => (

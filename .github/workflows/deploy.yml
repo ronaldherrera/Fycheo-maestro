@@ -2,7 +2,7 @@ name: Deploy Fycheo Maestro
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   maestro-deploy:
