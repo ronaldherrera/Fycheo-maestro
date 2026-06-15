@@ -80,7 +80,7 @@ export const Dashboard: React.FC = () => {
       setOwnerProfiles(ownersData);
       setProfilesCount(profCount ?? 0);
       setFichajesHoy(fichajesCount ?? 0);
-      setTransactions((txData ?? []) as Transaction[]);
+      setTransactions((txData ?? []) as unknown as Transaction[]);
 
       const companyWallet  = (companiesData ?? []).reduce((s: number, c: any) => s + (c.wallet_balance ?? 0), 0);
       const personalWallet = (profilesWallet ?? []).reduce((s: number, p: any) => s + (p.wallet_balance ?? 0), 0);
