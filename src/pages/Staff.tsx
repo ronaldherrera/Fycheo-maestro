@@ -161,6 +161,8 @@ export function Staff() {
   const getInitials = (name: string) =>
     name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
 
+  const getAvatarHue = (name: string) => 240 + ((name?.charCodeAt(0) ?? 0) % 40);
+
   const isSupermaestro = (m: StaffMember) => m.role === 'supermaestro';
   const hasAllScreens  = (m: StaffMember) => !m.permissions?.screens || m.permissions.screens.length === 0;
   const hasAllMboxes   = (m: StaffMember) => !m.permissions?.mailboxes || m.permissions.mailboxes.length === 0;
@@ -221,14 +223,33 @@ export function Staff() {
                 {/* Fila principal */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                   {/* Avatar */}
-                  <div style={{
-                    width: 44, height: 44, borderRadius: 12, flexShrink: 0,
-                    background: meta.bg, border: `1px solid ${meta.color}40`,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: '0.875rem', fontWeight: 700, color: meta.color,
-                  }}>
-                    {getInitials(m.name)}
-                  </div>
+                  {(() => {
+                    const hue = getAvatarHue(m.name);
+                    return (
+                      <div style={{
+                        width: 44, height: 44, borderRadius: 12, flexShrink: 0,
+                        background: m.avatar_url ? 'transparent' : `linear-gradient(135deg, hsl(${hue},65%,52%), hsl(${hue + 20},70%,40%))`,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: '0.875rem', fontWeight: 700, color: 'white',
+                        overflow: 'hidden',
+                      }}>
+                        {m.avatar_url ? (
+                          <img
+                            src={m.avatar_url}
+                            alt={m.name}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 12 }}
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = 'none';
+                              (e.target as HTMLImageElement).parentElement!.style.background = `linear-gradient(135deg, hsl(${hue},65%,52%), hsl(${hue + 20},70%,40%))`;
+                              (e.target as HTMLImageElement).parentElement!.innerHTML = `<span style="font-size:0.875rem;font-weight:700;color:white">${getInitials(m.name)}</span>`;
+                            }}
+                          />
+                        ) : (
+                          <span>{getInitials(m.name)}</span>
+                        )}
+                      </div>
+                    );
+                  })()}
 
                   {/* Info */}
                   <div style={{ flex: 1, minWidth: 0 }}>

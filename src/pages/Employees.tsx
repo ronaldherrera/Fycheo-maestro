@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { 
   Search, 
-  User, 
   RefreshCw,
   Eye,
   X
@@ -16,6 +15,7 @@ interface Profile {
   ss_number?: string;
   role?: string;
   company_name?: string;
+  avatar_url?: string | null;
   created_at: string;
 }
 
@@ -188,9 +188,43 @@ export const Employees: React.FC = () => {
                   <tr key={profile.id}>
                     <td>
                       <div className="employee-cell">
-                        <div className="avatar-mini">
-                          <User size={14} />
-                        </div>
+                        {(() => {
+                          const name = profile.full_name || '';
+                          const hue = 240 + ((name.charCodeAt(0) ?? 0) % 40);
+                          const initials = name.split(' ').map((w: string) => w[0]).slice(0, 2).join('').toUpperCase();
+                          return (
+                            <div
+                              className="avatar-mini"
+                              style={{
+                                background: profile.avatar_url ? 'transparent' : `linear-gradient(135deg, hsl(${hue},65%,52%), hsl(${hue + 20},70%,40%))`,
+                                border: 'none',
+                                color: 'white',
+                                fontSize: '0.65rem',
+                                fontWeight: 700,
+                                overflow: 'hidden',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                              }}
+                            >
+                              {profile.avatar_url ? (
+                                <img
+                                  src={profile.avatar_url}
+                                  alt={name}
+                                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                  onError={(e) => {
+                                    (e.target as HTMLImageElement).style.display = 'none';
+                                    const p = (e.target as HTMLImageElement).parentElement!;
+                                    p.style.background = `linear-gradient(135deg, hsl(${hue},65%,52%), hsl(${hue + 20},70%,40%))`;
+                                    p.innerHTML = `<span style="font-size:0.65rem;font-weight:700;color:white">${initials}</span>`;
+                                  }}
+                                />
+                              ) : (
+                                <span>{initials}</span>
+                              )}
+                            </div>
+                          );
+                        })()}
                         <div className="employee-info">
                           <span className="employee-name">{profile.full_name}</span>
                           <span className="employee-sub">{profile.email}</span>

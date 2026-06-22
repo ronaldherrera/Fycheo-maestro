@@ -130,7 +130,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <aside className="sidebar-container">
       <div className="sidebar-logo">
         <div className="logo-icon">
-          <img src="/brand/icono.svg" alt="Fycheo Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+          <img src="https://fycheo.es/brand/icono.svg" alt="Fycheo Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
         </div>
         <div className="logo-text">
           <h2>Fycheo</h2>

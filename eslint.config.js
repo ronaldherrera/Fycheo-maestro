@@ -23,6 +23,13 @@ export default tseslint.config(
         'warn',
         { allowConstantExport: true },
       ],
+      // Prevenir vectores de inyección de código
+      'no-eval': 'error',
+      'no-implied-eval': 'error',
+      'no-new-func': 'error',
+      'no-script-url': 'error',
+      // Evitar logs en producción (fuga de información)
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
     },
   },
 )
