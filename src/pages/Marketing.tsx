@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { formatDateTime } from '../lib/utils';
 import {
   Megaphone, Plus, X, TrendingUp, MousePointerClick,
   Eye, Target, Pencil, Trash2, AlertCircle,
@@ -390,7 +391,7 @@ Formato de respuesta: lista numerada, cada punto con un titulo corto y 2-3 linea
       const json = await res.json();
       if (!res.ok) throw new Error(json.error?.message ?? 'Error Gemini');
       const text = json.candidates?.[0]?.content?.parts?.[0]?.text ?? 'Sin respuesta';
-      const date = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      const date = formatDateTime(new Date());
       setAiInsight(text); localStorage.setItem('gsc_ai_insight', text);
       setAiInsightDate(date); localStorage.setItem('gsc_ai_insight_date', date);
     } catch (e: any) {

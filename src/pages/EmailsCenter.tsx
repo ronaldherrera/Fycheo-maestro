@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { formatDate, formatDateTime } from '../lib/utils';
 import {
   ArrowLeft,
   Send,
@@ -470,7 +471,7 @@ export const EmailsCenter: React.FC<EmailsCenterProps> = ({
                   ...e.tracking,
                   status: updated.tracking_status as 'sent' | 'delivered' | 'opened',
                   openedAt: updated.opened_at
-                    ? new Date(updated.opened_at).toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+                    ? formatDateTime(updated.opened_at)
                     : undefined,
                   opens: newOpens,
                   clicks: newClicks,
@@ -490,7 +491,7 @@ export const EmailsCenter: React.FC<EmailsCenterProps> = ({
                   ...prev.tracking,
                   status: updated.tracking_status as 'sent' | 'delivered' | 'opened',
                   openedAt: updated.opened_at
-                    ? new Date(updated.opened_at).toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+                    ? formatDateTime(updated.opened_at)
                     : undefined,
                   opens: updated.opens_data ?? [],
                   clicks: newClicks,
@@ -511,7 +512,7 @@ export const EmailsCenter: React.FC<EmailsCenterProps> = ({
                   ...prev.tracking,
                   status: updated.tracking_status as 'sent' | 'delivered' | 'opened',
                   openedAt: updated.opened_at
-                    ? new Date(updated.opened_at).toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+                    ? formatDateTime(updated.opened_at)
                     : undefined,
                   opens: updated.opens_data ?? [],
                   clicks: newClicks,
@@ -1238,7 +1239,7 @@ export const EmailsCenter: React.FC<EmailsCenterProps> = ({
         : campaignTarget === 'pro' 
           ? 'Solo cuentas premium (Pro/Enterprise)' 
           : 'Cuentas gratuitas (Free/Basic)',
-      sentDate: isScheduled ? new Date(campaignDate).toLocaleDateString() : new Date().toLocaleDateString(),
+      sentDate: isScheduled ? formatDate(campaignDate) : formatDate(new Date()),
       sentCount: targetUserCount,
       openRate: isScheduled ? 0 : parseFloat((60 + Math.random() * 30).toFixed(1)),
       clickRate: isScheduled ? 0 : parseFloat((15 + Math.random() * 25).toFixed(1)),
@@ -7039,7 +7040,7 @@ export const EmailsCenter: React.FC<EmailsCenterProps> = ({
                       const opens = trackingEmail.tracking.opens || [];
                       const lastOpen = opens.length > 0 ? opens[opens.length - 1] : null;
                       const lastOpenFormatted = lastOpen
-                        ? new Date(lastOpen.opened_at).toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+                        ? formatDateTime(lastOpen.opened_at)
                         : trackingEmail.tracking.openedAt;
                       return <strong style={{ fontSize: '0.83rem', color: 'var(--text-main)' }}>{lastOpenFormatted}</strong>;
                     })()}
@@ -7067,10 +7068,10 @@ export const EmailsCenter: React.FC<EmailsCenterProps> = ({
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   {trackingEmail.tracking.clicks.map((click, i) => {
                     const firstClickFormatted = click.firstClickedAt
-                      ? new Date(click.firstClickedAt).toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+                      ? formatDateTime(click.firstClickedAt)
                       : 'Sin fecha';
                     const lastClickFormatted = click.lastClickedAt
-                      ? new Date(click.lastClickedAt).toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+                      ? formatDateTime(click.lastClickedAt)
                       : firstClickFormatted;
 
                     return (

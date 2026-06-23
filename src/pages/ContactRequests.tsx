@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { formatDateTime } from '../lib/utils';
 import { 
   MessageSquare, 
   Trash2, 
@@ -558,7 +559,7 @@ export const ContactRequests: React.FC<ContactRequestsProps> = ({
                 <div className="sender-metadata">
                   <h3>{selectedMessage.name}</h3>
                   <span className="msg-full-date">
-                    Recibido el {new Date(selectedMessage.created_at).toLocaleString('es-ES', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    Recibido el {formatDateTime(selectedMessage.created_at)}
                   </span>
                 </div>
               </div>
@@ -607,7 +608,7 @@ export const ContactRequests: React.FC<ContactRequestsProps> = ({
                 <div className="detail-history-reply">
                   <div className="reply-history-header">
                     <CheckCircle2 size={14} className="history-icon" />
-                    <span>Respuesta enviada el {selectedMessage.replied_at ? new Date(selectedMessage.replied_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''}</span>
+                    <span>Respuesta enviada el {selectedMessage.replied_at ? formatDateTime(selectedMessage.replied_at) : ''}</span>
                   </div>
                   <div className="reply-history-body">
                     {(selectedMessage.reply_body || '').split('\n').map((line, idx) => (

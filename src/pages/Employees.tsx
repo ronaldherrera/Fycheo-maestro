@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { formatDateTime } from '../lib/utils';
 import { 
   Search, 
   RefreshCw,
@@ -308,8 +309,8 @@ export const Employees: React.FC = () => {
                           
                           return (
                             <tr key={entry.id}>
-                              <td>{checkInDate.toLocaleString()}</td>
-                              <td>{checkOutDate ? checkOutDate.toLocaleString() : <span className="active-entry-label animate-pulse">● En curso</span>}</td>
+                              <td>{formatDateTime(entry.check_in)}</td>
+                              <td>{entry.check_out ? formatDateTime(entry.check_out) : <span className="active-entry-label animate-pulse">● En curso</span>}</td>
                               <td>
                                 <span className={`badge ${
                                   entry.status === 'approved' ? 'badge-success' : 

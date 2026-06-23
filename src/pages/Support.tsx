@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
+import { formatDate, formatDateTime } from '../lib/utils';
 import {
   Search, RefreshCw, Building2, Users, Smartphone,
   ChevronRight, ArrowLeft, CreditCard,
@@ -109,15 +110,6 @@ function planMeta(plan: string) {
   return PLAN_META[plan?.toLowerCase()] ?? { label: plan?.toUpperCase() || 'Sin plan', color: '#9ca3af', bg: 'rgba(156,163,175,0.1)' };
 }
 
-function fmtDate(iso: string) {
-  return new Date(iso).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
-}
-
-function fmtDateTime(iso: string) {
-  return new Date(iso).toLocaleDateString('es-ES', {
-    day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
-  });
-}
 
 function fmtBalance(n: number) {
   return `${n >= 0 ? '' : '-'}${Math.abs(n).toFixed(2)} €`;
@@ -705,7 +697,7 @@ const ViewAccountDetail: React.FC<ViewAccountDetailProps> = ({
             <DetailItem label="DNI / NIE" value={account.dni_nie || '—'} />
             <DetailItem label="Teléfono de Contacto" value={account.phone || '—'} />
             <DetailItem label="Número de Seguridad Social" value={account.ss_number || '—'} />
-            <DetailItem label="Fecha de Registro" value={fmtDateTime(account.created_at)} />
+            <DetailItem label="Fecha de Registro" value={formatDateTime(account.created_at)} />
           </div>
         </div>
 
@@ -887,7 +879,7 @@ const ViewAccountDetail: React.FC<ViewAccountDetailProps> = ({
                           {tx.description || 'Transacción de saldo'}
                         </div>
                         <div style={{ fontSize: '0.65rem', color: 'var(--text-darker)', marginTop: 2, display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-                          <span>{fmtDateTime(tx.created_at)}</span>
+                          <span>{formatDateTime(tx.created_at)}</span>
                           {tx.payment_method_details && <span>· {tx.payment_method_details}</span>}
                           {txStatusBadge(tx.invoice_status)}
                         </div>
@@ -1690,7 +1682,7 @@ const ViewCompanyDetail: React.FC<ViewCompanyDetailProps> = ({
             <DetailItem label="Razón Fiscal" value={company.fiscal_name || '—'} />
             <DetailItem label="CIF / NIF" value={company.cif || '—'} />
             <DetailItem label="Saldo Disponible" value={fmtBalance(companyBalance)} color={companyBalance < 0 ? '#f87171' : '#34d399'} />
-            <DetailItem label="Fecha de Registro" value={fmtDate(company.created_at)} />
+            <DetailItem label="Fecha de Registro" value={formatDate(company.created_at)} />
             <DetailItem label="Dueño (Propietario)" value={owner.full_name} />
             
             <button onClick={handleOpenEditCompany} style={{ ...actionBtnSt, width: '100%', justifyContent: 'center', marginTop: '0.5rem' }}>
@@ -1796,7 +1788,7 @@ const ViewCompanyDetail: React.FC<ViewCompanyDetailProps> = ({
                               <>
                                 <Clock size={12} color="var(--text-darker)" />
                                 <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }} title={`Última acción: ${latestEntry.entry_type ?? ''}`}>
-                                  {fmtDateTime(latestEntry.occurred_at ?? '')}
+                                  {formatDateTime(latestEntry.occurred_at ?? '')}
                                 </span>
                               </>
                             ) : (
@@ -1858,7 +1850,7 @@ const ViewCompanyDetail: React.FC<ViewCompanyDetailProps> = ({
 
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                           <div style={{ fontSize: '0.72rem', color: 'var(--text-darker)' }}>
-                            Alta {fmtDate(mgr.created_at)}
+                            Alta {formatDate(mgr.created_at)}
                           </div>
                           
                           {!isOwner && (
@@ -1939,7 +1931,7 @@ const ViewCompanyDetail: React.FC<ViewCompanyDetailProps> = ({
                                 {tx.description || 'Movimiento de saldo'}
                               </div>
                               <div style={{ fontSize: '0.68rem', color: 'var(--text-darker)', marginTop: 3, display: 'flex', gap: '10px' }}>
-                                <span>{fmtDateTime(tx.created_at)}</span>
+                                <span>{formatDateTime(tx.created_at)}</span>
                                 {tx.payment_method_details && <span>• {tx.payment_method_details}</span>}
                               </div>
                             </div>

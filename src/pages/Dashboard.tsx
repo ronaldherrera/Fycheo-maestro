@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
+import { formatDateTime } from '../lib/utils';
 import {
   Building2, Users, Clock, RefreshCw, Wallet,
   AlertTriangle, Sparkles,
@@ -17,7 +18,6 @@ const PLAN_META: Record<string, { label: string; color: string }> = {
   enterprise: { label: 'Enterprise', color: '#34d399' },
 };
 const fmt = (n: number) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(n);
-const fmtDate = (iso: string) => new Date(iso).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
 const planPrice = (plan: string) => PLAN_PRICES[(plan || 'free').toLowerCase()] ?? 0;
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
@@ -276,7 +276,7 @@ export const Dashboard: React.FC = () => {
                     </div>
                     <div style={{ minWidth: 0 }}>
                       <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tx.description || 'Movimiento'}</p>
-                      <p style={{ fontSize: '0.68rem', color: 'var(--text-darker)' }}>{tx.companies?.name ?? '—'} · {fmtDate(tx.created_at)}</p>
+                      <p style={{ fontSize: '0.68rem', color: 'var(--text-darker)' }}>{tx.companies?.name ?? '—'} · {formatDateTime(tx.created_at)}</p>
                     </div>
                   </div>
                   <span style={{ fontWeight: 700, fontSize: '0.85rem', flexShrink: 0, color: isIncome ? 'var(--success-light)' : 'var(--primary-light)' }}>
@@ -345,7 +345,7 @@ export const Dashboard: React.FC = () => {
                   </div>
                   <div style={{ minWidth: 0 }}>
                     <p style={{ fontSize: '0.83rem', fontWeight: 600, color: 'var(--text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.name}</p>
-                    <p style={{ fontSize: '0.68rem', color: 'var(--text-darker)' }}>{fmtDate(c.created_at)}</p>
+                    <p style={{ fontSize: '0.68rem', color: 'var(--text-darker)' }}>{formatDateTime(c.created_at)}</p>
                   </div>
                 </div>
                 <PlanBadge plan={c.plan} />

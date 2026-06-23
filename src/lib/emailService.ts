@@ -1,5 +1,6 @@
 import { supabase } from './supabase';
 import { Email } from '../types';
+import { formatDate } from './utils';
 
 // ================================================================
 // ENVÍO DE CORREOS VIA SMTP DE HOSTINGER (Edge Function send-email)
@@ -92,7 +93,7 @@ export function contactMessageToEmail(msg: ContactMessage): Email {
 ${(msg.message ?? '').replace(/\n/g, '<br/>')}
 ${msg.replied ? `<br/><hr style="border:none;border-top:1px solid #2a2a4a;margin:16px 0;"/>
 <div style="background:rgba(139,92,246,0.07);border-left:3px solid #8b5cf6;padding:12px 16px;border-radius:6px;margin-top:8px;">
-  <p style="font-size:0.78rem;color:#8b5cf6;margin:0 0 6px;font-weight:600;">✅ RESPONDIDO (${new Date(msg.replied_at ?? '').toLocaleDateString('es-ES')})</p>
+  <p style="font-size:0.78rem;color:#8b5cf6;margin:0 0 6px;font-weight:600;">✅ RESPONDIDO (${formatDate(msg.replied_at)})</p>
   ${(msg.reply_body ?? '').replace(/\n/g, '<br/>')}
 </div>` : ''}`,
     date: dateLabel,

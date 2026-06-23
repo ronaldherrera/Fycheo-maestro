@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
+import { formatDate } from '../lib/utils';
 import {
     Wallet, TrendingUp, TrendingDown, CircleDollarSign,
     RefreshCw, Sparkles, CalendarDays,
@@ -38,15 +39,25 @@ const fmt = (n: number) =>
 const MONTHS_ES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 
 const PLAN_PRICES: Record<string, number> = {
-    free: 0, basic: 29, pro: 49, ultimate: 99, enterprise: 99,
+    gratis: 0, basico: 15, estandar: 29, avanzado: 59, expansion: 99, elite: 149, enterprise: 0,
+    // Legacy (por si existen registros anteriores a la migración)
+    free: 0, basic: 15, pro: 29, business: 59, ultimate: 99, premium: 149,
 };
 
 const PLAN_META: Record<string, { label: string; color: string }> = {
-    free:       { label: 'Free',       color: '#6b7280' },
-    basic:      { label: 'Básico',     color: '#60a5fa' },
-    pro:        { label: 'Pro',        color: '#a78bfa' },
-    ultimate:   { label: 'Ultimate',   color: '#f59e0b' },
-    enterprise: { label: 'Enterprise', color: '#34d399' },
+    gratis:     { label: 'Gratis',    color: '#6b7280' },
+    basico:     { label: 'Básico',    color: '#60a5fa' },
+    estandar:   { label: 'Estándar',  color: '#818cf8' },
+    avanzado:   { label: 'Avanzado',  color: '#a78bfa' },
+    expansion:  { label: 'Expansión', color: '#f59e0b' },
+    elite:      { label: 'Élite',     color: '#f97316' },
+    enterprise: { label: 'Enterprise',color: '#34d399' },
+    // Legacy
+    free:       { label: 'Free',      color: '#6b7280' },
+    basic:      { label: 'Básico',    color: '#60a5fa' },
+    pro:        { label: 'Estándar',  color: '#818cf8' },
+    business:   { label: 'Avanzado',  color: '#a78bfa' },
+    premium:    { label: 'Élite',     color: '#f97316' },
 };
 
 const ChartTooltip = ({ active, payload, label }: any) => {
@@ -450,7 +461,7 @@ const RecentTransactions: React.FC<{ transactions: Transaction[] }> = ({ transac
                             <div style={{ minWidth: 0 }}>
                                 <p style={{ fontSize: '0.83rem', fontWeight: 600, color: 'var(--text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tx.description || 'Movimiento'}</p>
                                 <p style={{ fontSize: '0.7rem', color: 'var(--text-darker)' }}>
-                                    {(tx as any).companies?.name ?? '—'} · {new Date(tx.created_at).toLocaleDateString('es-ES')}
+                                    {(tx as any).companies?.name ?? '—'} · {formatDate(tx.created_at)}
                                 </p>
                             </div>
                         </div>

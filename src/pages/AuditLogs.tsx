@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { formatDateTime } from '../lib/utils';
 import { 
   Search, 
   Terminal, 
@@ -163,13 +164,7 @@ export const AuditLogs: React.FC = () => {
                       </span>
                     </td>
                     <td className="log-date-cell">
-                      {log.created_at ? new Date(log.created_at).toLocaleString([], {
-                        day: '2-digit',
-                        month: 'short',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit'
-                      }) : '—'}
+                      {log.created_at ? formatDateTime(log.created_at) : '—'}
                     </td>
                   </tr>
                 ))

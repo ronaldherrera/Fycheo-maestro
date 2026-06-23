@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { formatDateTime } from '../lib/utils';
 import { 
   Sparkles, 
   Plus, 
@@ -378,7 +379,7 @@ export const Demos: React.FC = () => {
                           </div>
                         </td>
                         <td className="date-cell">
-                          {new Date(item.created_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                          {formatDateTime(item.created_at)}
                         </td>
                         <td>
                           <button 

@@ -13,7 +13,8 @@ interface Company {
   id: string;
   name: string;
   plan: string;
-  balance: number;
+  wallet_balance: number;
+  fichajes_blocked?: boolean;
   kiosk_limit: number;
   created_at: string;
   fiscal_name?: string;
@@ -30,6 +31,7 @@ export const Companies: React.FC = () => {
   const [editingCompany, setEditingCompany] = useState<Company | null>(null);
   const [newPlan, setNewPlan] = useState('');
   const [newBalance, setNewBalance] = useState<number>(0);
+  const [newFichajesBlocked, setNewFichajesBlocked] = useState(false);
   const [saving, setSaving] = useState(false);
 
   const fetchCompanies = async () => {
@@ -43,14 +45,14 @@ export const Companies: React.FC = () => {
       if (!error && data) {
         setCompanies(data);
       } else {
-        // Fallback de datos de prueba premium
+        // Fallback de datos de prueba
         setCompanies([
-          { id: '1', name: 'DemoCorp', plan: 'pro', balance: 45.50, kiosk_limit: 3, created_at: new Date(Date.now() - 30 * 86400000).toISOString(), fiscal_name: 'DemoCorp Solutions S.L.', cif: 'B12345678' },
-          { id: '2', name: 'Alimentación Paco', plan: 'basic', balance: -5.00, kiosk_limit: 1, created_at: new Date(Date.now() - 60 * 86400000).toISOString(), fiscal_name: 'Francisco Gómez S.L.', cif: 'B98765432' },
-          { id: '3', name: 'Tecnología Avanzada', plan: 'enterprise', balance: 250.00, kiosk_limit: 10, created_at: new Date(Date.now() - 15 * 86400000).toISOString(), fiscal_name: 'Tech Advanced Europa S.A.', cif: 'A87654321' },
-          { id: '4', name: 'Modas Lucía', plan: 'free', balance: 0.00, kiosk_limit: 1, created_at: new Date(Date.now() - 100 * 86400000).toISOString(), fiscal_name: 'Lucía Ortiz Torres', cif: '44555666X' },
-          { id: '5', name: 'Bufete Martínez', plan: 'pro', balance: 12.00, kiosk_limit: 2, created_at: new Date(Date.now() - 45 * 86400000).toISOString(), fiscal_name: 'Martínez & Asociados S.C.', cif: 'J55443322' },
-          { id: '6', name: 'Clínica Dental Dentalia', plan: 'pro', balance: -29.90, kiosk_limit: 2, created_at: new Date(Date.now() - 120 * 86400000).toISOString(), fiscal_name: 'Dentalia Integra S.L.P.', cif: 'B55667788' }
+          { id: '1', name: 'DemoCorp', plan: 'estandar', wallet_balance: 45.50, kiosk_limit: 3, created_at: new Date(Date.now() - 30 * 86400000).toISOString(), fiscal_name: 'DemoCorp Solutions S.L.', cif: 'B12345678' },
+          { id: '2', name: 'Alimentación Paco', plan: 'basico', wallet_balance: 0.00, fichajes_blocked: true, kiosk_limit: 1, created_at: new Date(Date.now() - 60 * 86400000).toISOString(), fiscal_name: 'Francisco Gómez S.L.', cif: 'B98765432' },
+          { id: '3', name: 'Tecnología Avanzada', plan: 'enterprise', wallet_balance: 250.00, kiosk_limit: 10, created_at: new Date(Date.now() - 15 * 86400000).toISOString(), fiscal_name: 'Tech Advanced Europa S.A.', cif: 'A87654321' },
+          { id: '4', name: 'Modas Lucía', plan: 'gratis', wallet_balance: 0.00, kiosk_limit: 1, created_at: new Date(Date.now() - 100 * 86400000).toISOString(), fiscal_name: 'Lucía Ortiz Torres', cif: '44555666X' },
+          { id: '5', name: 'Bufete Martínez', plan: 'avanzado', wallet_balance: 12.00, kiosk_limit: 2, created_at: new Date(Date.now() - 45 * 86400000).toISOString(), fiscal_name: 'Martínez & Asociados S.C.', cif: 'J55443322' },
+          { id: '6', name: 'Clínica Dental Dentalia', plan: 'estandar', wallet_balance: 0.00, fichajes_blocked: true, kiosk_limit: 2, created_at: new Date(Date.now() - 120 * 86400000).toISOString(), fiscal_name: 'Dentalia Integra S.L.P.', cif: 'B55667788' }
         ]);
       }
     } catch (e) {
@@ -66,8 +68,9 @@ export const Companies: React.FC = () => {
 
   const handleOpenEdit = (company: Company) => {
     setEditingCompany(company);
-    setNewPlan(company.plan || 'free');
-    setNewBalance(company.balance ?? 0);
+    setNewPlan(company.plan || 'gratis');
+    setNewBalance(company.wallet_balance ?? 0);
+    setNewFichajesBlocked(company.fichajes_blocked ?? false);
   };
 
   const handleSave = async () => {
@@ -79,7 +82,8 @@ export const Companies: React.FC = () => {
         .from('companies')
         .update({
           plan: newPlan,
-          balance: newBalance
+          wallet_balance: newBalance,
+          fichajes_blocked: newFichajesBlocked,
         })
         .eq('id', editingCompany.id);
 
@@ -88,9 +92,9 @@ export const Companies: React.FC = () => {
       }
 
       // Si falla (p.ej. localmente), actualizamos el estado en local simulándolo
-      setCompanies(prev => prev.map(c => 
-        c.id === editingCompany.id 
-          ? { ...c, plan: newPlan, balance: newBalance } 
+      setCompanies(prev => prev.map(c =>
+        c.id === editingCompany.id
+          ? { ...c, plan: newPlan, wallet_balance: newBalance, fichajes_blocked: newFichajesBlocked }
           : c
       ));
 
@@ -144,11 +148,13 @@ export const Companies: React.FC = () => {
             className="form-input form-select"
           >
             <option value="all">Todos los planes</option>
-            <option value="basic">Plan Básico (29€)</option>
-            <option value="pro">Plan Pro (59€)</option>
-            <option value="business">Plan Business (99€)</option>
-            <option value="premium">Plan Premium (149€)</option>
-            <option value="enterprise">Plan Enterprise</option>
+            <option value="gratis">Gratis (0€)</option>
+            <option value="basico">Básico (15€)</option>
+            <option value="estandar">Estándar (29€)</option>
+            <option value="avanzado">Avanzado (59€)</option>
+            <option value="expansion">Expansión (99€)</option>
+            <option value="elite">Élite (149€)</option>
+            <option value="enterprise">Enterprise</option>
           </select>
         </div>
         <button onClick={fetchCompanies} className="btn btn-secondary btn-icon-only" title="Recargar tabla">
@@ -188,19 +194,27 @@ export const Companies: React.FC = () => {
                       </div>
                     </td>
                     <td>
-                      <span className={`badge ${
-                        company.plan === 'enterprise' ? 'badge-info' :
-                        company.plan === 'premium'    ? 'badge-info' :
-                        company.plan === 'business'   ? 'badge-success' :
-                        company.plan === 'pro'        ? 'badge-success' :
-                        company.plan === 'basic'      ? 'badge-warning' : 'badge-danger'
-                      }`}>
-                        {(company.plan || 'free').toUpperCase()}
-                      </span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <span className={`badge ${
+                          company.plan === 'enterprise' ? 'badge-info' :
+                          company.plan === 'elite'      ? 'badge-info' :
+                          company.plan === 'expansion'  ? 'badge-success' :
+                          company.plan === 'avanzado'   ? 'badge-success' :
+                          company.plan === 'estandar'   ? 'badge-warning' :
+                          company.plan === 'basico'     ? 'badge-warning' : 'badge-danger'
+                        }`}>
+                          {(company.plan || 'gratis').toUpperCase()}
+                        </span>
+                        {company.fichajes_blocked && (
+                          <span title="Fichajes bloqueados por saldo insuficiente" style={{ fontSize: '0.65rem', padding: '1px 6px', borderRadius: 100, background: 'rgba(239,68,68,0.15)', color: '#f87171', border: '1px solid rgba(239,68,68,0.3)', fontWeight: 700 }}>
+                            BLOQUEADO
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td>
-                      <span className={`balance-value ${(company.balance ?? 0) < 0 ? 'negative' : 'positive'}`}>
-                        {(company.balance ?? 0).toFixed(2)}€
+                      <span className={`balance-value ${(company.wallet_balance ?? 0) <= 0 ? 'negative' : 'positive'}`}>
+                        {(company.wallet_balance ?? 0).toFixed(2)}€
                       </span>
                     </td>
                     <td>
@@ -242,27 +256,43 @@ export const Companies: React.FC = () => {
                   onChange={(e) => setNewPlan(e.target.value)}
                   className="form-input form-select"
                 >
-                  <option value="basic">Básico — 29€/mes (hasta 8 empleados)</option>
-                  <option value="pro">Pro — 59€/mes (hasta 18 empleados)</option>
-                  <option value="business">Business — 99€/mes (hasta 40 empleados)</option>
-                  <option value="premium">Premium — 149€/mes (hasta 100 empleados)</option>
+                  <option value="gratis">Gratis — 0€/mes (hasta 3 empleados)</option>
+                  <option value="basico">Básico — 15€/mes (hasta 10 empleados)</option>
+                  <option value="estandar">Estándar — 29€/mes (hasta 15 empleados)</option>
+                  <option value="avanzado">Avanzado — 59€/mes (hasta 30 empleados)</option>
+                  <option value="expansion">Expansión — 99€/mes (hasta 60 empleados)</option>
+                  <option value="elite">Élite — 149€/mes (hasta 100 empleados)</option>
                   <option value="enterprise">Enterprise — Personalizado (+100 empleados)</option>
                 </select>
               </div>
 
               <div className="input-group">
-                <label className="input-label">Saldo de Cuenta (€)</label>
+                <label className="input-label">Saldo Wallet (€)</label>
                 <div className="balance-input-wrap">
                   <DollarSign size={16} className="input-icon" />
-                  <input 
-                    type="number" 
-                    step="0.01" 
-                    value={newBalance} 
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={newBalance}
                     onChange={(e) => setNewBalance(parseFloat(e.target.value) || 0)}
                     className="form-input form-input-with-icon"
                   />
                 </div>
-                <span className="input-help">Un saldo negativo significa que el cliente tiene pagos pendientes. Un saldo positivo representa crédito a favor.</span>
+                <span className="input-help">Ajuste manual del saldo. Las recargas normales se procesan vía Stripe.</span>
+              </div>
+
+              <div className="input-group" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <input
+                  type="checkbox"
+                  id="fichajes-blocked"
+                  checked={newFichajesBlocked}
+                  onChange={(e) => setNewFichajesBlocked(e.target.checked)}
+                  style={{ width: 16, height: 16, accentColor: '#ef4444', cursor: 'pointer' }}
+                />
+                <label htmlFor="fichajes-blocked" className="input-label" style={{ marginBottom: 0, cursor: 'pointer' }}>
+                  Fichajes bloqueados
+                </label>
+                <span className="input-help" style={{ marginTop: 0 }}>Bloquear manualmente el fichaje de empleados (normalmente lo gestiona el sistema de cobro automático).</span>
               </div>
             </div>
             <div className="modal-footer">

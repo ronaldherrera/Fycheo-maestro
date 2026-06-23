@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { formatDate } from '../lib/utils';
 import {
   BookOpen, Plus, Trash2, Search, ExternalLink, CheckSquare,
   Square, FileText, Bell, Building2, User, RefreshCw,
@@ -253,7 +254,7 @@ const ProfileRow: React.FC<{ p: Profile; color: string }> = ({ p, color }) => (
     {p.profile_type && (
       <span style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'capitalize', color, background: `${color}18`, borderRadius: 6, padding: '2px 8px', flexShrink: 0 }}>{p.profile_type}</span>
     )}
-    <span style={{ fontSize: '0.65rem', color: 'var(--text-darker)', flexShrink: 0 }}>{new Date(p.created_at).toLocaleDateString('es-ES')}</span>
+    <span style={{ fontSize: '0.65rem', color: 'var(--text-darker)', flexShrink: 0 }}>{formatDate(p.created_at)}</span>
   </div>
 );
 
@@ -327,7 +328,7 @@ const AgendaSection: React.FC = () => {
                 {c.sector && <p style={{ fontSize: '0.68rem', color: 'var(--text-darker)' }}>{c.sector}</p>}
               </div>
               <span style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', color: PLAN_COLOR[c.plan] ?? '#6b7280', background: `${PLAN_COLOR[c.plan] ?? '#6b7280'}18`, borderRadius: 6, padding: '2px 8px' }}>{c.plan}</span>
-              <span style={{ fontSize: '0.65rem', color: 'var(--text-darker)' }}>{new Date(c.created_at).toLocaleDateString('es-ES')}</span>
+              <span style={{ fontSize: '0.65rem', color: 'var(--text-darker)' }}>{formatDate(c.created_at)}</span>
             </div>
           ))}
         </div>
