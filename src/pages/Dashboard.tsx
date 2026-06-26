@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
 import { formatDateTime } from '../lib/utils';
+import { PLAN_PRICES, PLAN_META } from '../utils/planConfig';
 import {
   Building2, Users, Clock, RefreshCw, Wallet,
   AlertTriangle, Sparkles,
@@ -9,16 +10,8 @@ import {
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
 
-const PLAN_PRICES: Record<string, number> = { free: 0, basic: 29, pro: 49, ultimate: 99, enterprise: 99 };
-const PLAN_META: Record<string, { label: string; color: string }> = {
-  free:       { label: 'Free',       color: '#6b7280' },
-  basic:      { label: 'Básico',     color: '#60a5fa' },
-  pro:        { label: 'Pro',        color: '#a78bfa' },
-  ultimate:   { label: 'Ultimate',   color: '#f59e0b' },
-  enterprise: { label: 'Enterprise', color: '#34d399' },
-};
 const fmt = (n: number) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(n);
-const planPrice = (plan: string) => PLAN_PRICES[(plan || 'free').toLowerCase()] ?? 0;
+const planPrice = (plan: string) => PLAN_PRICES[(plan || 'gratis').toLowerCase()] ?? 0;
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -63,7 +56,7 @@ export const Dashboard: React.FC = () => {
       // Segunda ronda: perfiles dueños de empresas con plan de pago (secuencial porque depende de companies)
       const paidOwnerIds = [...new Set(
         (companiesData ?? [])
-          .filter(c => (c.plan || 'free') !== 'free' && c.owner_id)
+          .filter(c => (c.plan || 'gratis') !== 'gratis' && c.owner_id)
           .map(c => c.owner_id),
       )];
 
@@ -103,7 +96,7 @@ export const Dashboard: React.FC = () => {
 
   const planDistrib = useMemo(() => {
     const m: Record<string, number> = {};
-    for (const c of companies) { const p = (c.plan || 'free').toLowerCase(); m[p] = (m[p] ?? 0) + 1; }
+    for (const c of companies) { const p = (c.plan || 'gratis').toLowerCase(); m[p] = (m[p] ?? 0) + 1; }
     return Object.entries(m)
       .map(([plan, count]) => ({ plan, count, ...(PLAN_META[plan] ?? { label: plan, color: '#6b7280' }) }))
       .sort((a, b) => b.count - a.count);
@@ -116,7 +109,7 @@ export const Dashboard: React.FC = () => {
     const grouped: Record<string, { owner: OwnerProfile; deps: Company[] }> = {};
 
     for (const c of companies) {
-      if ((c.plan || 'free') === 'free') continue;
+      if ((c.plan || 'gratis') === 'gratis') continue;
       const owner = ownerMap.get(c.owner_id);
       if (!owner) continue;
       if (!grouped[owner.id]) grouped[owner.id] = { owner, deps: [] };
@@ -164,7 +157,7 @@ export const Dashboard: React.FC = () => {
 
       {/* ── KPIs ── */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: 14 }}>
-        <KpiCard icon={Building2}     color="purple"  label="Organizaciones"   value={companies.length}    sub={`${companies.filter(c => c.plan !== 'free').length} con plan activo`} />
+        <KpiCard icon={Building2}     color="purple"  label="Organizaciones"   value={companies.length}    sub={`${companies.filter(c => (c.plan || 'gratis') !== 'gratis').length} con plan activo`} />
         <KpiCard icon={Users}         color="blue"    label="Usuarios"         value={profilesCount}       sub="Perfiles registrados" />
         <KpiCard icon={Clock}         color="emerald" label="Fichajes hoy"     value={fichajesHoy}         sub="Registros de jornada" />
         <KpiCard icon={Sparkles}      color="amber"   label="MRR Estimado"     value={fmt(mrr)}            sub={`${fmt(mrr * 12)} / año`} />
@@ -387,7 +380,7 @@ const KpiCard: React.FC<{
 };
 
 const PlanBadge: React.FC<{ plan: string }> = ({ plan }) => {
-  const meta = PLAN_META[(plan || 'free').toLowerCase()] ?? { label: plan, color: '#6b7280' };
+  const meta = PLAN_META[(plan || 'gratis').toLowerCase()] ?? { label: plan, color: '#6b7280' };
   return (
     <span style={{ fontSize: '0.68rem', padding: '2px 7px', borderRadius: 100, background: `${meta.color}18`, color: meta.color, border: `1px solid ${meta.color}28`, fontWeight: 700, flexShrink: 0, whiteSpace: 'nowrap' }}>
       {meta.label}

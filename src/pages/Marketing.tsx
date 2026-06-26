@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { formatDateTime } from '../lib/utils';
+import { PLAN_PRICES } from '../utils/planConfig';
 import {
   Megaphone, Plus, X, TrendingUp, MousePointerClick,
   Eye, Target, Pencil, Trash2, AlertCircle,
@@ -217,8 +218,6 @@ export const Marketing: React.FC<MarketingProps> = ({ section }) => {
     const now = new Date();
     const thisMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     const twelveAgo = new Date(now.getFullYear() - 1, now.getMonth(), 1).toISOString();
-    const PLAN_PRICES: Record<string, number> = { free: 0, basic: 29, pro: 49, ultimate: 99, enterprise: 99 };
-
     const [
       { count: totalCompanies },
       { data: allCompanies },
@@ -244,7 +243,7 @@ export const Marketing: React.FC<MarketingProps> = ({ section }) => {
 
     setAnalytics({
       totalCompanies:     totalCompanies ?? 0,
-      payingCompanies:    allCompanies?.filter(c => c.plan !== 'free').length ?? 0,
+      payingCompanies:    allCompanies?.filter(c => (c.plan || 'gratis') !== 'gratis').length ?? 0,
       totalContacts:      totalContacts ?? 0,
       thisMonthCompanies: companiesByMonth[thisMonth] ?? 0,
       thisMonthContacts:  contactsByMonth[thisMonth] ?? 0,

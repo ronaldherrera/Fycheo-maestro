@@ -47,12 +47,12 @@ export const Companies: React.FC = () => {
       } else {
         // Fallback de datos de prueba
         setCompanies([
-          { id: '1', name: 'DemoCorp', plan: 'estandar', wallet_balance: 45.50, kiosk_limit: 3, created_at: new Date(Date.now() - 30 * 86400000).toISOString(), fiscal_name: 'DemoCorp Solutions S.L.', cif: 'B12345678' },
+          { id: '1', name: 'DemoCorp', plan: 'pro15', wallet_balance: 45.50, kiosk_limit: 3, created_at: new Date(Date.now() - 30 * 86400000).toISOString(), fiscal_name: 'DemoCorp Solutions S.L.', cif: 'B12345678' },
           { id: '2', name: 'Alimentación Paco', plan: 'basico', wallet_balance: 0.00, fichajes_blocked: true, kiosk_limit: 1, created_at: new Date(Date.now() - 60 * 86400000).toISOString(), fiscal_name: 'Francisco Gómez S.L.', cif: 'B98765432' },
           { id: '3', name: 'Tecnología Avanzada', plan: 'enterprise', wallet_balance: 250.00, kiosk_limit: 10, created_at: new Date(Date.now() - 15 * 86400000).toISOString(), fiscal_name: 'Tech Advanced Europa S.A.', cif: 'A87654321' },
           { id: '4', name: 'Modas Lucía', plan: 'gratis', wallet_balance: 0.00, kiosk_limit: 1, created_at: new Date(Date.now() - 100 * 86400000).toISOString(), fiscal_name: 'Lucía Ortiz Torres', cif: '44555666X' },
-          { id: '5', name: 'Bufete Martínez', plan: 'avanzado', wallet_balance: 12.00, kiosk_limit: 2, created_at: new Date(Date.now() - 45 * 86400000).toISOString(), fiscal_name: 'Martínez & Asociados S.C.', cif: 'J55443322' },
-          { id: '6', name: 'Clínica Dental Dentalia', plan: 'estandar', wallet_balance: 0.00, fichajes_blocked: true, kiosk_limit: 2, created_at: new Date(Date.now() - 120 * 86400000).toISOString(), fiscal_name: 'Dentalia Integra S.L.P.', cif: 'B55667788' }
+          { id: '5', name: 'Bufete Martínez', plan: 'pro30', wallet_balance: 12.00, kiosk_limit: 2, created_at: new Date(Date.now() - 45 * 86400000).toISOString(), fiscal_name: 'Martínez & Asociados S.C.', cif: 'J55443322' },
+          { id: '6', name: 'Clínica Dental Dentalia', plan: 'pro15', wallet_balance: 0.00, fichajes_blocked: true, kiosk_limit: 2, created_at: new Date(Date.now() - 120 * 86400000).toISOString(), fiscal_name: 'Dentalia Integra S.L.P.', cif: 'B55667788' }
         ]);
       }
     } catch (e) {
@@ -150,10 +150,10 @@ export const Companies: React.FC = () => {
             <option value="all">Todos los planes</option>
             <option value="gratis">Gratis (0€)</option>
             <option value="basico">Básico (15€)</option>
-            <option value="estandar">Estándar (29€)</option>
-            <option value="avanzado">Avanzado (59€)</option>
-            <option value="expansion">Expansión (99€)</option>
-            <option value="elite">Élite (149€)</option>
+            <option value="pro15">Pro 15 (29€)</option>
+            <option value="pro30">Pro 30 (59€)</option>
+            <option value="pro60">Pro 60 (99€)</option>
+            <option value="pro100">Pro 100 (149€)</option>
             <option value="enterprise">Enterprise</option>
           </select>
         </div>
@@ -197,9 +197,13 @@ export const Companies: React.FC = () => {
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                         <span className={`badge ${
                           company.plan === 'enterprise' ? 'badge-info' :
+                          company.plan === 'pro100'     ? 'badge-info' :
                           company.plan === 'elite'      ? 'badge-info' :
+                          company.plan === 'pro60'      ? 'badge-success' :
                           company.plan === 'expansion'  ? 'badge-success' :
+                          company.plan === 'pro30'      ? 'badge-success' :
                           company.plan === 'avanzado'   ? 'badge-success' :
+                          company.plan === 'pro15'      ? 'badge-warning' :
                           company.plan === 'estandar'   ? 'badge-warning' :
                           company.plan === 'basico'     ? 'badge-warning' : 'badge-danger'
                         }`}>
@@ -258,10 +262,10 @@ export const Companies: React.FC = () => {
                 >
                   <option value="gratis">Gratis — 0€/mes (hasta 3 empleados)</option>
                   <option value="basico">Básico — 15€/mes (hasta 10 empleados)</option>
-                  <option value="estandar">Estándar — 29€/mes (hasta 15 empleados)</option>
-                  <option value="avanzado">Avanzado — 59€/mes (hasta 30 empleados)</option>
-                  <option value="expansion">Expansión — 99€/mes (hasta 60 empleados)</option>
-                  <option value="elite">Élite — 149€/mes (hasta 100 empleados)</option>
+                  <option value="pro15">Pro 15 — 29€/mes (hasta 15 empleados)</option>
+                  <option value="pro30">Pro 30 — 59€/mes (hasta 30 empleados)</option>
+                  <option value="pro60">Pro 60 — 99€/mes (hasta 60 empleados)</option>
+                  <option value="pro100">Pro 100 — 149€/mes (hasta 100 empleados)</option>
                   <option value="enterprise">Enterprise — Personalizado (+100 empleados)</option>
                 </select>
               </div>

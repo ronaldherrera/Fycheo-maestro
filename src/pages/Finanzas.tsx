@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
 import { formatDate } from '../lib/utils';
+import { PLAN_PRICES, PLAN_META } from '../utils/planConfig';
 import {
     Wallet, TrendingUp, TrendingDown, CircleDollarSign,
     RefreshCw, Sparkles, CalendarDays,
@@ -37,28 +38,6 @@ const fmt = (n: number) =>
     new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(n);
 
 const MONTHS_ES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-
-const PLAN_PRICES: Record<string, number> = {
-    gratis: 0, basico: 15, estandar: 29, avanzado: 59, expansion: 99, elite: 149, enterprise: 0,
-    // Legacy (por si existen registros anteriores a la migración)
-    free: 0, basic: 15, pro: 29, business: 59, ultimate: 99, premium: 149,
-};
-
-const PLAN_META: Record<string, { label: string; color: string }> = {
-    gratis:     { label: 'Gratis',    color: '#6b7280' },
-    basico:     { label: 'Básico',    color: '#60a5fa' },
-    estandar:   { label: 'Estándar',  color: '#818cf8' },
-    avanzado:   { label: 'Avanzado',  color: '#a78bfa' },
-    expansion:  { label: 'Expansión', color: '#f59e0b' },
-    elite:      { label: 'Élite',     color: '#f97316' },
-    enterprise: { label: 'Enterprise',color: '#34d399' },
-    // Legacy
-    free:       { label: 'Free',      color: '#6b7280' },
-    basic:      { label: 'Básico',    color: '#60a5fa' },
-    pro:        { label: 'Estándar',  color: '#818cf8' },
-    business:   { label: 'Avanzado',  color: '#a78bfa' },
-    premium:    { label: 'Élite',     color: '#f97316' },
-};
 
 const ChartTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
@@ -153,7 +132,7 @@ export const Finanzas: React.FC<{ onGoToSupport: (accountId: string) => void }> 
     const mrrData = useMemo(() => {
         const byPlan: Record<string, number> = {};
         for (const c of companies) {
-            const p = (c.plan || 'free').toLowerCase();
+            const p = (c.plan || 'gratis').toLowerCase();
             byPlan[p] = (byPlan[p] ?? 0) + 1;
         }
         const rows = Object.entries(byPlan).map(([plan, count]) => ({

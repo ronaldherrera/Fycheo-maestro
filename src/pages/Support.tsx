@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import { formatDate, formatDateTime } from '../lib/utils';
+import { PLAN_META, PLAN_PRICES, PLAN_LIMITS, PLAN_EXTRA_PRICES } from '../utils/planConfig';
 import {
   Search, RefreshCw, Building2, Users, Smartphone,
   ChevronRight, ArrowLeft, CreditCard,
@@ -81,30 +82,6 @@ interface SupportProps {
 }
 
 /* ── HELPERS DE FORMATO ── */
-const PLAN_META: Record<string, { label: string; color: string; bg: string }> = {
-  free:       { label: 'Free',       color: '#9ca3af', bg: 'rgba(156,163,175,0.12)' },
-  basic:      { label: 'Básico',     color: '#60a5fa', bg: 'rgba(59,130,246,0.12)' },
-  pro:        { label: 'Pro',        color: '#a78bfa', bg: 'rgba(139,92,246,0.15)' },
-  enterprise: { label: 'Enterprise', color: '#34d399', bg: 'rgba(16,185,129,0.12)' },
-};
-
-const PLAN_PRICES: Record<string, number> = {
-  free: 0,
-  basic: 29,
-  pro: 59,
-  business: 99,
-  premium: 149,
-  ultimate: 99,
-  enterprise: 0
-};
-
-const PLAN_LIMITS: Record<string, number> = {
-  basic: 8, pro: 18, business: 40, premium: 100,
-};
-
-const PLAN_EXTRA_PRICES: Record<string, number> = {
-  basic: 3, pro: 2, business: 1, premium: 0,
-};
 
 function planMeta(plan: string) {
   return PLAN_META[plan?.toLowerCase()] ?? { label: plan?.toUpperCase() || 'Sin plan', color: '#9ca3af', bg: 'rgba(156,163,175,0.1)' };
@@ -661,7 +638,7 @@ const ViewAccountDetail: React.FC<ViewAccountDetailProps> = ({
   // Previsión de gastos del próximo mes (renovaciones)
   const nextMonthForecast = companies.reduce((acc, c) => {
     if ((c as any).individual_billing) return acc;
-    const planKey = c.plan?.toLowerCase() || 'basic';
+    const planKey = c.plan?.toLowerCase() || 'basico';
     const price = PLAN_PRICES[planKey] ?? 0;
     return acc + price;
   }, 0);
@@ -720,7 +697,7 @@ const ViewAccountDetail: React.FC<ViewAccountDetailProps> = ({
                 const empCount = companyMembers.filter(m => m.company_id === c.id && m.role?.toLowerCase() === 'employee').length;
                 
                 // Calcular cuota y fecha de próxima renovación
-                const planPrice = PLAN_PRICES[c.plan?.toLowerCase() || 'basic'] ?? 0;
+                const planPrice = PLAN_PRICES[c.plan?.toLowerCase() || 'basico'] ?? 0;
                 const nextPaymentDate = (() => {
                   if (!c.created_at) return '—';
                   const created = new Date(c.created_at);
@@ -779,7 +756,7 @@ const ViewAccountDetail: React.FC<ViewAccountDetailProps> = ({
 
                         {/* Empleados + uso de cuota */}
                         {(() => {
-                          const planKey = c.plan?.toLowerCase() || 'basic';
+                          const planKey = c.plan?.toLowerCase() || 'basico';
                           const limit = PLAN_LIMITS[planKey];
                           const extra = limit ? Math.max(0, empCount - limit) : 0;
                           const extraCost = extra * (PLAN_EXTRA_PRICES[planKey] ?? 0);
@@ -1154,7 +1131,7 @@ const ViewCompanyDetail: React.FC<ViewCompanyDetailProps> = ({
     name: company.name || '',
     fiscal_name: company.fiscal_name || '',
     cif: company.cif || '',
-    plan: company.plan || 'basic'
+    plan: company.plan || 'basico'
   });
 
   // Estados para Gestión de Miembros
@@ -1321,7 +1298,7 @@ const ViewCompanyDetail: React.FC<ViewCompanyDetailProps> = ({
       name: company.name || '',
       fiscal_name: company.fiscal_name || '',
       cif: company.cif || '',
-      plan: company.plan || 'basic'
+      plan: company.plan || 'basico'
     });
     setShowEditCompany(true);
   };
@@ -1886,7 +1863,7 @@ const ViewCompanyDetail: React.FC<ViewCompanyDetailProps> = ({
                         Suscripción {pm.label}
                       </div>
                       <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>
-                        Cuota de {PLAN_PRICES[company.plan?.toLowerCase() || 'basic'] ?? 0} €/mes
+                        Cuota de {PLAN_PRICES[company.plan?.toLowerCase() || 'basico'] ?? 0} €/mes
                       </div>
                     </div>
                   </div>
@@ -2012,11 +1989,13 @@ const ViewCompanyDetail: React.FC<ViewCompanyDetailProps> = ({
                   onChange={e => setCompanyForm(f => ({ ...f, plan: e.target.value }))}
                   style={modalInputStyle}
                 >
-                  <option value="free">Free</option>
-                  <option value="basic">Básico (29 €/mes)</option>
-                  <option value="pro">Pro (49 €/mes)</option>
-                  <option value="ultimate">Ultimate (99 €/mes)</option>
-                  <option value="enterprise">Enterprise (99 €/mes)</option>
+                  <option value="gratis">Gratis (0 €/mes)</option>
+                  <option value="basico">Básico (15 €/mes)</option>
+                  <option value="pro15">Pro 15 (29 €/mes)</option>
+                  <option value="pro30">Pro 30 (59 €/mes)</option>
+                  <option value="pro60">Pro 60 (99 €/mes)</option>
+                  <option value="pro100">Pro 100 (149 €/mes)</option>
+                  <option value="enterprise">Enterprise</option>
                 </select>
               </div>
 
