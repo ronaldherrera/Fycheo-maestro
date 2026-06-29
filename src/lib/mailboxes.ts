@@ -14,6 +14,7 @@ export const MAILBOXES: Mailbox[] = [
   { email: 'noreply@fycheo.es',         label: 'noreply',        displayName: 'Fycheo',           inbox: false, color: '#6b7280' },
   { email: 'info@fycheo.es',            label: 'info',           displayName: 'Fycheo Info',      inbox: false, color: '#ec4899' },
   { email: 'marketing@fycheo.es',       label: 'marketing',      displayName: 'Fycheo Marketing', inbox: true,  color: '#06b6d4' },
+  { email: 'contacto@fycheo.es',        label: 'contacto',       displayName: 'Fycheo Contacto',  inbox: true,  color: '#f97316' },
 ];
 
 export function loadSignatures(): Record<string, string> {
